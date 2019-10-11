@@ -17,12 +17,15 @@ namespace serialConnection
         {
             InitializeComponent();
             PortRefresh();
+            cmdClose.Enabled = false;
+            gboValues.Visible = false;
         }
 
         private void PortRefresh()
         {
             cboPorts.Items.Clear();
             cboPorts.Items.AddRange(SerialPort.GetPortNames());
+            
         }
 
         private void cmdExitApp_Click(object sender, EventArgs e)
@@ -38,11 +41,15 @@ namespace serialConnection
             }
             else
             {
-                serialPort1.PortName = cboPorts.SelectedItem.ToString();
+                
                 if(!serialPort1.IsOpen)
                 {
+                    serialPort1.PortName = cboPorts.SelectedItem.ToString();
                     serialPort1.Open(); //Open serial port connection
                     lblStatus.Text = "Serial Connection Established";
+                    cmdOpen.Enabled = false;
+                    cmdClose.Enabled = true;
+                    gboValues.Visible = true;
                 }
                 else
                 {
@@ -56,6 +63,17 @@ namespace serialConnection
         {
             serialPort1.Close();
             lblStatus.Text = "Serial Port Closed";
+            cmdOpen.Enabled = true;
+            cmdClose.Enabled = false;
+        }
+
+        private void cmdReceive_Click(object sender, EventArgs e)
+        {
+            if(serialPort1.IsOpen)
+            {
+                string result = serialPort1.ReadLine();
+                txtSerialValue.Text = result;
+            }
         }
     }
 }
