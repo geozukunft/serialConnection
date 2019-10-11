@@ -45,11 +45,20 @@ namespace serialConnection
                 if(!serialPort1.IsOpen)
                 {
                     serialPort1.PortName = cboPorts.SelectedItem.ToString();
-                    serialPort1.Open(); //Open serial port connection
-                    lblStatus.Text = "Serial Connection Established";
-                    cmdOpen.Enabled = false;
-                    cmdClose.Enabled = true;
-                    gboValues.Visible = true;
+                    try
+                    {
+                        serialPort1.Open(); //Open serial port connection
+                        lblStatus.Text = "Serial Connection Established";
+                        cmdOpen.Enabled = false;
+                        cmdClose.Enabled = true;
+                        gboValues.Visible = true;
+                    }
+                    catch (System.UnauthorizedAccessException)
+                    {
+                        lblStatus.Text = "COM Port is open in another appilcation";
+                    }
+                    
+                   
                 }
                 else
                 {
